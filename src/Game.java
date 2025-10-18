@@ -1,7 +1,11 @@
 import entities.Entity;
 import grid.Cell;
+import grid.Step;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
+
 
 import static entities.Entity.CLIFF;
 import static entities.Entity.RESOURCE_1;
@@ -30,6 +34,7 @@ public class Game {
     private int playerX = 0;
     private int playerY = 0;
 
+    private List<Step> path = new ArrayList<>();
 
     public void increaseTime(){
         currentTime += 1;
@@ -39,35 +44,41 @@ public class Game {
 
     public void addScore(){
         this.score += 50 - currentTime;
+        System.out.println("You found resource!!!");
     }
 
     public void movePlayerX(boolean direction){
         if(!isActive)
             return;
+        int oldY = playerY;
+        int oldX = playerX;
+
 
         if(direction && playerX < grid.length - 1)
             playerX += 1;
         else if (!direction && playerX > 0)
             playerX -= 1;
 
-        changeGameStateAfterMove();
 
+        changeGameStateAfterMove(oldX, oldY);
     }
 
     public void movePlayerY(boolean direction){
         if(!isActive)
             return;
+        int oldY = playerY;
+        int oldX = playerX;
+
 
         if(direction && playerY < grid.length - 1)
             playerY += 1;
         else if (!direction && playerY > 0)
             playerY -= 1;
 
-
-        changeGameStateAfterMove();
+        changeGameStateAfterMove(oldX, oldY);
     }
 
-    private void changeGameStateAfterMove(){
+    private void changeGameStateAfterMove(int oldX, int oldY){
         increaseTime();
 
         var currentCell = grid[playerY][playerX];  // ✓ Changed order
@@ -78,6 +89,9 @@ public class Game {
             isActive = false;
         else if (currentCell.getEntity() == RESOURCE_1)
             addScore();
+
+        var step = new Step(currentTime, playerX, playerY,  oldX, oldY);
+        path.add(step);
     }
 
 
@@ -133,5 +147,13 @@ public class Game {
 
     public void setPlayerX(int playerX) {
         this.playerX = playerX;
+    }
+
+    public List<Step> getPath() {
+        return path;
+    }
+
+    public void setPath(List<Step> path) {
+        this.path = path;
     }
 }

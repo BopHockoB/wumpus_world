@@ -1,5 +1,6 @@
 import entities.Entity;
 import grid.Cell;
+import grid.Step;
 
 int K = 6;
 
@@ -30,6 +31,8 @@ void main(){
         handlePlayerInput();
     }
     while (game.isActive());
+
+    printPath();
 }
 
 private void drawGrid() {
@@ -154,12 +157,17 @@ private void drawInfo() {
 }
 
 private void drawOptions() {
-    System.out.println("\n=== OPTIONS ===");
+
     System.out.println("W - Move Up (Y+1)");
     System.out.println("S - Move Down (Y-1)");
     System.out.println("A - Move Left (X-1)");
     System.out.println("D - Move Right (X+1)");
-    System.out.println("Q - Quit");
+}
+
+private void printPath(){
+    for(Step step: game.getPath()){
+        System.out.println(step);
+    }
 }
 
 private void handlePlayerInput() {
