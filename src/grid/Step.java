@@ -8,21 +8,31 @@ public class Step {
     private int previousX;
     private int previousY;
 
+    private boolean isAdjacentToCliff;
+
 
     @Override
     public String toString() {
-        return "Step" + stepNumber +
+
+
+       StringBuilder returnStr = new StringBuilder("Step" + stepNumber +
                 " ["+ (previousX + 1) + ", " + (previousY + 1) + "]"
                 + " --> "
-                + "["+ (x + 1) + ", " + (y + 1) + "]";
+                + "["+ (x + 1) + ", " + (y + 1) + "]");
+
+       if (isAdjacentToCliff)
+           returnStr.append("!");
+       return returnStr.toString();
     }
 
-    public Step(int stepNumber, int x, int y, int previousX, int previousY) {
+    public Step(int stepNumber, int x, int y, int previousX, int previousY,  boolean isAdjacentToCliff) {
         this.stepNumber = stepNumber;
         this.x = x;
         this.y = y;
         this.previousX = previousX;
         this.previousY = previousY;
+        this.isAdjacentToCliff = isAdjacentToCliff;
+
     }
 
     public int getPreviousX() {

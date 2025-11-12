@@ -68,7 +68,7 @@ private String getCellSymbol(Cell cell, int row, int col, int playerX, int playe
     // Player position always visible
 
     if (row == playerY && col == playerX) {
-        if (isAdjacentToCliff(row, col)) {
+        if (game.isAdjacentToCliff(row, col)) {
             return "P!";
         }
         return "P";
@@ -81,7 +81,7 @@ private String getCellSymbol(Cell cell, int row, int col, int playerX, int playe
             return "C";
         } else if (entity == Entity.RESOURCE_1) {
             return "R1";
-        } else if (isAdjacentToCliff(row, col)) {
+        } else if (game.isAdjacentToCliff(row, col)) {
             return "!";
         }
         return "*";
@@ -105,32 +105,7 @@ private String getCellSymbol(Cell cell, int row, int col, int playerX, int playe
     return "?";
 }
 
-private boolean isAdjacentToCliff(int row, int col) {
-    Cell[][] grid = game.getGrid();
-    int K = grid.length;
 
-    // Check all 4 adjacent cells (up, down, left, right)
-    int[][] directions = {
-            {row + 1, col},     // Up
-            {row - 1, col},     // Down
-            {row, col + 1},     // Right
-            {row, col - 1}      // Left
-    };
-
-    for (int[] dir : directions) {
-        int r = dir[0];
-        int c = dir[1];
-
-        // Check if within bounds
-        if (r >= 0 && r < K && c >= 0 && c < K) {
-            if (grid[r][c].getEntity() == Entity.CLIFF) {
-                return true;
-            }
-        }
-    }
-
-    return false;
-}
 
 
 private boolean isAdjacentVisited(int row, int col, Cell[][] grid, int K) {
@@ -191,6 +166,8 @@ private void handlePlayerInput() {
         case "D":
             game.movePlayerX(true);
             break;
+        case "B":
+
         case "Q":
             game.setActive(false);
             System.out.println("Game ended!");

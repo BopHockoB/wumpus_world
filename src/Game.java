@@ -11,7 +11,7 @@ import static entities.Entity.CLIFF;
 import static entities.Entity.RESOURCE_1;
 
 
-public class Game {
+public class Game implements Cloneable{
 
     public Game(int K) {
        grid = new Cell[K][K];
@@ -83,14 +83,20 @@ public class Game {
 
         var currentCell = grid[playerY][playerX];  // ✓ Changed order
 
-        currentCell.visitCell();
+
 
         if(currentCell.getEntity() == CLIFF)
             isActive = false;
-        else if (currentCell.getEntity() == RESOURCE_1)
+        else if (currentCell.getEntity() == RESOURCE_1 && !currentCell.isVisited())
             addScore();
 
-        var step = new Step(currentTime, playerX, playerY,  oldX, oldY);
+        currentCell.visitCell();
+
+        var step = new Step(
+                currentTime,
+                playerX, playerY,
+                oldX, oldY,
+                isAdjacentToCliff(playerY, playerX));
         path.add(step);
     }
 
@@ -99,6 +105,31 @@ public class Game {
         grid[y][x].setEntity(entity);
     }
 
+        public boolean isAdjacentToCliff(int row, int col) {
+        int K = grid.length;
+
+        // Check all 4 adjacent cells (up, down, left, right)
+        int[][] directions = {
+                {row + 1, col},     // Up
+                {row - 1, col},     // Down
+                {row, col + 1},     // Right
+                {row, col - 1}      // Left
+        };
+
+        for (int[] dir : directions) {
+            int r = dir[0];
+            int c = dir[1];
+
+            // Check if within bounds
+            if (r >= 0 && r < K && c >= 0 && c < K) {
+                if (grid[r][c].getEntity() == Entity.CLIFF) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
 
 
 
@@ -155,5 +186,10 @@ public class Game {
 
     public void setPath(List<Step> path) {
         this.path = path;
+    }
+
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        return super.clone();
     }
 }
